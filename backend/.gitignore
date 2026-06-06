@@ -1,17 +1,9 @@
-# Secrets
 **/.env
 **/.env.local
 **/.env.*.local
 
-# Node / Next.js
 **/node_modules/
 **/.next/
 **/out/
 **/build/
 **/dist/
-
-# Editor / OS
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
