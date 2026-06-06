@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: ai-analytics-backend
+    ports:
+      - "8675:8675"
+    environment:
+      - PORT=8675
+      - NODE_ENV=production
+      - API_AUTH_TOKEN=example-auth-token-2026
+      - API_KEY=${API_KEY}
+      # Future production link configuration (only DuckDB for MVP version)
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ai_analytics
+    depends_on:
+      - postgres
+
+  # Future production Database Instance
+  postgres:
+    image: postgres:16-alpine
+    container_name: ai-analytics-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ai_analytics
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
