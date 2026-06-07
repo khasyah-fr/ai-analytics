@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fitLinearTrend, fitMovingAverage } from './forecast.ts';
+import { fitLinearTrend, fitMovingAverage, fitHoltWinters } from './forecast.ts';
 
 describe('Forecasting Math Utilities', () => {
   
@@ -56,6 +56,38 @@ describe('Forecasting Math Utilities', () => {
       expect(result.forecast[0]).toBeCloseTo(10, 2);
       expect(result.forecast[1]).toBeCloseTo(0, 2);
       expect(result.forecast[2]).toBe(0); // Lower bound check
+    });
+  });
+
+  describe('fitHoltWinters', () => {
+    it('should capture cyclic patterns and reproduce peak intervals next year', () => {
+      // 12 months with clear cyclical peak in summer (index 5 & 6)
+      const history = [10, 12, 15, 20, 40, 100, 95, 30, 18, 14, 11, 9];
+      const horizon = 7; // Forecast through next year's July peak
+
+      const result = fitHoltWinters(history, horizon, 0.2, 0.1, 0.3);
+
+      // Verify execution metadata returned safely
+      expect(result.params.alpha).toBe(0.2);
+      expect(result.params.history_len).toBe(12);
+
+      // Verify that next year's summer forecast maps higher than next year's winter baseline
+      const Jan2026 = result.forecast[0];
+      const Jun2026 = result.forecast[5];
+      const Jul2026 = result.forecast[6];
+
+      expect(Jun2026).toBeGreaterThan(Jan2026);
+      expect(Jul2026).toBeGreaterThan(Jan2026);
+    });
+
+    it('should smoothly downgrade back to linear trend if historical periods are insufficient', () => {
+      // Holt winters requires a minimum window of 12 for month cycles
+      const incompleteHistory = [10, 20, 30, 40]; 
+      const result = fitHoltWinters(incompleteHistory, 2);
+
+      // Should seamlessly leverage fitLinearTrend underlying logic 
+      expect(result.params).toHaveProperty('r2');
+      expect(result.forecast[0]).toBeCloseTo(50, 1);
     });
   });
 });
