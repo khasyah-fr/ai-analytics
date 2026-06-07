@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { queryAll } from '../repository/duckdb.ts';
-import { runQueryMetric } from '../tools/query.ts';
+import { queryAll } from '../repository/duckdb.js';
+import { runQueryMetric } from '../tools/query.js';
 
 const router = Router();
 

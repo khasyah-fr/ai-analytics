@@ -1,5 +1,5 @@
-import { queryAll } from '../repository/duckdb.ts';
-import { BUFFER } from '../config/index.ts';
+import { queryAll } from '../repository/duckdb.js';
+import { BUFFER } from '../config/index.js';
 
 export interface ForecastInput {
   grain: 'product_category';

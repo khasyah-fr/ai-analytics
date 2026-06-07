@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { runQueryMetric } from '../tools/query.ts';
+import { runQueryMetric } from '../tools/query.js';
 
 const router = Router();
 

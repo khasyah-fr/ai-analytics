@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import { PORT, ALLOW_CORS } from './config/index.ts';
-import { initDb, getRowCount } from './repository/duckdb.ts';
+import { PORT, ALLOW_CORS } from './config/index.js';
+import { initDb, getRowCount } from './repository/duckdb.js';
 
-import { requireAuth } from './middleware/auth.ts';
-import analyticsRouter from './handler/analytics.ts';
-import chartRouter from './handler/charts.ts';
-import askRouter from './handler/ask.ts';
+import { requireAuth } from './middleware/auth.js';
+import analyticsRouter from './handler/analytics.js';
+import chartRouter from './handler/charts.js';
+import askRouter from './handler/ask.js';
 
 (BigInt.prototype as any).toJSON = function () {
   return Number(this);

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { API_AUTH_TOKEN } from '../config/index.ts';
+import { API_AUTH_TOKEN } from '../config/index.js';
 
 export function requireAuth(req: Request, res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;

@@ -1,8 +1,8 @@
 import { OpenAI } from 'openai';
-import { API_KEY, LLM_BASE_URL, LLM_MODEL } from '../config/index.ts';
-import { METRICS, DIMENSIONS, FIELDS, getRegistrySummaryForPrompt, QueryMetricInputSchema, ForecastInputSchema } from '../repository/zod.ts';
-import { runQueryMetric } from '../tools/query.ts';
-import { runForecast } from '../tools/forecast.ts';
+import { API_KEY, LLM_BASE_URL, LLM_MODEL } from '../config/index.js';
+import { METRICS, DIMENSIONS, FIELDS, getRegistrySummaryForPrompt, QueryMetricInputSchema, ForecastInputSchema } from '../repository/zod.js';
+import { runQueryMetric } from '../tools/query.js';
+import { runForecast } from '../tools/forecast.js';
 
 let client: OpenAI | null = null;
 
@@ -112,7 +112,7 @@ export async function askQuestion(question: string): Promise<any> {
       : fallback(text || "Cannot map query to a supported operation.");
   }
 
-  const call = calls[0];
+  const call = calls[0] as any;
   const name = call.function.name;
   let args: any;
   

@@ -1,5 +1,5 @@
-import { queryAll } from '../repository/duckdb.ts';
-import { METRICS, TIME_GRAINS, QueryMetricInputSchema, QueryMetricInput } from '../repository/zod.ts';
+import { queryAll } from '../repository/duckdb.js';
+import { METRICS, TIME_GRAINS, QueryMetricInputSchema, QueryMetricInput } from '../repository/zod.js';
 
 function buildWhere(input: QueryMetricInput) {
   const clauses: string[] = [];

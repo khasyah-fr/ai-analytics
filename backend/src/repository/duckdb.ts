@@ -1,5 +1,5 @@
 import duckdb from 'duckdb';
-import { DATA_CSV_PATH } from '../config/index.ts';
+import { DATA_CSV_PATH } from '../config/index.js';
 
 let db: duckdb.Database | null = null;
 let conn: duckdb.Connection | null = null;

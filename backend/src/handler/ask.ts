@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { askQuestion } from '../usecase/llm.ts';
+import { askQuestion } from '../usecase/llm.js';
 
 const router = Router();
 

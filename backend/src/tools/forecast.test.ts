@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fitLinearTrend, fitMovingAverage, fitHoltWinters } from './forecast.ts';
+import { fitLinearTrend, fitMovingAverage, fitHoltWinters } from './forecast.js';
 
 describe('Forecasting Math Utilities', () => {
   
@@ -68,7 +68,7 @@ describe('Forecasting Math Utilities', () => {
       const result = fitHoltWinters(history, horizon, 0.2, 0.1, 0.3);
 
       // Verify execution metadata returned safely
-      expect(result.params.alpha).toBe(0.2);
+      expect((result.params as any).alpha).toBe(0.2);
       expect(result.params.history_len).toBe(12);
 
       // Verify that next year's summer forecast maps higher than next year's winter baseline
