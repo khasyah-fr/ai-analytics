@@ -2,6 +2,10 @@
 
 Logistics analytics dashboard. Users can ask questions or browse the dashboard. Backend executes the SQL, the AI layer picks the tool, and the frontend renders the chart.
 
+Users can access live UI demo here, deployed using Vercel: https://ai-analytics-rose.vercel.app/
+
+Backend endpoints are here, deployed using Railway: https://ai-analytics-production-7e1b.up.railway.app/
+
 ---
 
 ## Features
