@@ -16,6 +16,6 @@ RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/data ./data
 
-EXPOSE 8675
+EXPOSE 8080
 
 CMD ["node", "dist/main.js"]
