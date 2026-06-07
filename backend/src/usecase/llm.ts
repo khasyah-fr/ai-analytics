@@ -1,6 +1,6 @@
 import { OpenAI } from 'openai';
 import { API_KEY, LLM_BASE_URL, LLM_MODEL } from '../config/index.ts';
-import { METRICS, DIMENSIONS, BREAKDOWNS, getRegistrySummaryForPrompt, QueryMetricInputSchema, ForecastInputSchema } from '../repository/zod.ts';
+import { METRICS, DIMENSIONS, FIELDS, getRegistrySummaryForPrompt, QueryMetricInputSchema, ForecastInputSchema } from '../repository/zod.ts';
 import { runQueryMetric } from '../tools/query.ts';
 import { runForecast } from '../tools/forecast.ts';
 
@@ -34,13 +34,13 @@ export function getAllTools(): any[] {
       type: 'function',
       function: {
         name: 'query_metric',
-        description: 'Compute a metric, optionally with breakdown, time grain, and filters.',
+        description: 'Compute a metric, optionally with fields, time grain, and filters.',
         parameters: {
           type: 'object',
           additionalProperties: false,
           properties: {
             metric: { type: 'string', enum: Object.keys(METRICS) },
-            breakdown: { type: ['string', 'null'], enum: [...BREAKDOWNS, null] },
+            fields: { type: ['string', 'null'], enum: [...FIELDS, null] },
             time_grain: { type: 'string', enum: ['day', 'week', 'month', 'year', 'none'], default: 'none' },
             filters: {
               type: 'array',
@@ -85,7 +85,7 @@ export function getAllTools(): any[] {
 }
 
 function fallback(reason: string) {
-  return { kind: 'unsupported', message: reason, supported_metrics: Object.keys(METRICS), supported_breakdowns: BREAKDOWNS };
+  return { kind: 'unsupported', message: reason, supported_metrics: Object.keys(METRICS), supported_fields: FIELDS };
 }
 
 export async function askQuestion(question: string): Promise<any> {
@@ -119,7 +119,7 @@ export async function askQuestion(question: string): Promise<any> {
   try {
     args = JSON.parse(call.function.arguments || '{}');
   } catch {
-    return fallback(`Corrupted AI arguments: ${call.function.arguments}`);
+    return fallback(`invalid arguments: ${call.function.arguments}`);
   }
 
   const cleanArgs = Object.fromEntries(Object.entries(args).filter(([_, v]) => v !== null));
@@ -128,7 +128,7 @@ export async function askQuestion(question: string): Promise<any> {
     if (name === 'query_metric') {
       const input = QueryMetricInputSchema.parse(cleanArgs);
       const res = await runQueryMetric(input);
-      const summary = `metric: ${input.metric}, breakdown: ${input.breakdown || 'none'}, rows: ${JSON.stringify(res.rows.slice(0, 20))}`;
+      const summary = `metric: ${input.metric}, fields: ${input.fields || 'none'}, rows: ${JSON.stringify(res.rows.slice(0, 20))}`;
       const answer = await summarize(question, name, summary);
       return { kind: 'query', answer, result: res };
     }
@@ -159,7 +159,7 @@ async function summarize(question: string, tool: string, summary: string): Promi
     messages: [
       {
         role: 'system',
-        content: `Summarize the tool results in 1-2 short sentences. State numbers exactly as returned. Do not invent values or speculate.`
+        content: `Summarize the tool results in 1-2 short sentences. State numbers exactly as returned. Do not invent values or speculate. Do not use emoji or ASCII-tables, use basic sentences.`
       },
       {
         role: 'user',
