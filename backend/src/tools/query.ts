@@ -42,10 +42,10 @@ export async function runQueryMetric(rawInput: Partial<QueryMetricInput> & { met
     order.push('period');
   }
 
-  if (input.breakdown) {
-    select.push(input.breakdown);
-    group.push(input.breakdown);
-    order.push(input.breakdown);
+  if (input.fields) {
+    select.push(input.fields);
+    group.push(input.fields);
+    order.push(input.fields);
   }
 
   select.push(`${metric.sqlAggregate} AS ${metric.outputLabel}`);
@@ -69,13 +69,13 @@ export async function runQueryMetric(rawInput: Partial<QueryMetricInput> & { met
     return formatted;
   });
 
-  const type = hasTime ? 'line' : input.breakdown ? 'bar' : 'number';
+  const type = hasTime ? 'line' : input.fields ? 'bar' : 'number';
 
   return {
     rows,
     plan: {
       metric: input.metric,
-      breakdown: input.breakdown || null,
+      fields: input.fields || null,
       time_grain: input.time_grain,
       filters: input.filters,
       date_from: input.date_from || null,
@@ -85,9 +85,9 @@ export async function runQueryMetric(rawInput: Partial<QueryMetricInput> & { met
     },
     viz_spec: {
       type,
-      x: hasTime ? 'period' : (input.breakdown || null),
+      x: hasTime ? 'period' : (input.fields || null),
       y: metric.outputLabel,
-      series: hasTime ? (input.breakdown || null) : null,
+      series: hasTime ? (input.fields || null) : null,
       y_unit: metric.unit,
       time_grain: input.time_grain,
     },

@@ -8,9 +8,10 @@ const ANALYTICS_METRICS = [
   'delivered_orders',
   'delayed_orders',
   'in_transit_orders',
+  'exception_orders',
+  'canceled_orders',
   'on_time_rate',
   'avg_delivery_days',
-  'revenue_at_risk_usd',
 ];
 
 router.get('/api/analytics', async (req, res) => {

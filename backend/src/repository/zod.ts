@@ -12,12 +12,12 @@ export const METRICS: Record<string, Metric> = {
   total_orders: { name: 'total_orders', description: 'Total orders.', sqlAggregate: 'COUNT(*)', outputLabel: 'total_orders', unit: 'count' },
   delivered_orders: { name: 'delivered_orders', description: "Delivered orders.", sqlAggregate: "SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END)", outputLabel: 'delivered_orders', unit: 'count' },
   delayed_orders: { name: 'delayed_orders', description: "Delayed orders.", sqlAggregate: "SUM(CASE WHEN status = 'delayed' THEN 1 ELSE 0 END)", outputLabel: 'delayed_orders', unit: 'count' },
+  in_transit_orders: { name: 'in_transit_orders', description: "Orders in transit.", sqlAggregate: "SUM(CASE WHEN status = 'in_transit' THEN 1 ELSE 0 END)", outputLabel: 'in_transit_orders', unit: 'count' },
+  exception_orders: { name: 'exception_orders', description: "Orders exception.", sqlAggregate: "SUM(CASE WHEN status = 'exception' THEN 1 ELSE 0 END)", outputLabel: 'exception_orders', unit: 'count' },
+  canceled_orders: { name: 'canceled_orders', description: "Orders canceled.", sqlAggregate: "SUM(CASE WHEN status = 'canceled' THEN 1 ELSE 0 END)", outputLabel: 'canceled_orders', unit: 'count' },
   on_time_rate: { name: 'on_time_rate', description: 'On-time delivery rate.', sqlAggregate: "SUM(CASE WHEN status = 'delivered' THEN 1.0 ELSE 0 END) / NULLIF(SUM(CASE WHEN status IN ('delivered','delayed','exception') THEN 1 ELSE 0 END), 0)", outputLabel: 'on_time_rate', unit: 'percent' },
   delay_rate: { name: 'delay_rate', description: "Delay rate.", sqlAggregate: "SUM(CASE WHEN status IN ('delayed','exception') THEN 1.0 ELSE 0 END) / NULLIF(SUM(CASE WHEN status IN ('delivered','delayed','exception') THEN 1 ELSE 0 END), 0)", outputLabel: 'delay_rate', unit: 'percent' },
   avg_delivery_days: { name: 'avg_delivery_days', description: 'Mean delivery time in days.', sqlAggregate: "AVG(DATE_DIFF('day', order_date, delivery_date))", outputLabel: 'avg_delivery_days', unit: 'days' },
-  total_revenue_usd: { name: 'total_revenue_usd', description: 'Sum of gross order value.', sqlAggregate: 'SUM(order_value_usd)', outputLabel: 'total_revenue_usd', unit: 'usd' },
-  in_transit_orders: { name: 'in_transit_orders', description: "Orders in transit.", sqlAggregate: "SUM(CASE WHEN status = 'in_transit' THEN 1 ELSE 0 END)", outputLabel: 'in_transit_orders', unit: 'count' },
-  revenue_at_risk_usd: { name: 'revenue_at_risk_usd', description: 'Order value tied up in delays.', sqlAggregate: "SUM(CASE WHEN status IN ('delayed','exception') THEN order_value_usd ELSE 0 END)", outputLabel: 'revenue_at_risk_usd', unit: 'usd' },
 };
 
 export const DIMENSIONS: Record<string, string> = {
@@ -30,7 +30,7 @@ export const DIMENSIONS: Record<string, string> = {
   status: 'Order status.',
 };
 
-export const BREAKDOWNS = ['carrier', 'region', 'product_category', 'warehouse', 'client_id', 'destination_city'] as const;
+export const FIELDS = ['carrier', 'region', 'product_category', 'warehouse', 'client_id', 'destination_city'] as const;
 
 export const TIME_GRAINS = {
   day: "DATE_TRUNC('day', order_date)",
@@ -42,7 +42,7 @@ export const TIME_GRAINS = {
 export function getRegistrySummaryForPrompt(): string {
   const lines = ['METRICS:'];
   Object.values(METRICS).forEach(m => lines.push(`  - ${m.name} (${m.unit}): ${m.description}`));
-  lines.push('', `BREAKDOWNS: ${BREAKDOWNS.join(', ')}`);
+  lines.push('', `FIELDS: ${FIELDS.join(', ')}`);
   lines.push('', `FILTERS: ${Object.keys(DIMENSIONS).join(', ')}`);
   lines.push('', 'TIME GRAINS: day, week, month, year, none');
   lines.push('', 'DATA WINDOW: 2025-01-01 to 2025-12-30');
@@ -61,7 +61,7 @@ export const FilterSchema = z.object({
 
 export const QueryMetricInputSchema = z.object({
   metric: z.string().refine(val => val in METRICS, { message: 'Unknown metric' }),
-  breakdown: z.enum(BREAKDOWNS).nullable().optional(),
+  fields: z.enum(FIELDS).nullable().optional(),
   time_grain: z.enum(['day', 'week', 'month', 'year', 'none']).default('none'),
   filters: z.array(FilterSchema).default([]),
   date_from: dateStr.nullable().optional(),

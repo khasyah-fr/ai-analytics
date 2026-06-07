@@ -17,6 +17,6 @@ export const LLM_MODEL = process.env.LLM_MODEL || 'anthropic/claude-3.5-sonnet';
 export const PORT = parseInt(process.env.PORT || '3000', 10);
 export const ALLOW_CORS = (process.env.ALLOW_CORS || 'http://localhost:3000')
 
-export const SAFETY_STOCK_PCT = parseFloat(process.env.SAFETY_STOCK_PCT || '0.20');
+export const BUFFER = parseFloat(process.env.BUFFER || '0.20');
 
 export const API_AUTH_TOKEN = process.env.API_AUTH_TOKEN || 'example-auth-token-2026';
