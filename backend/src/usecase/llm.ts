@@ -22,7 +22,7 @@ If query is unsupported, reply with plain text starting with "UNSUPPORTED:" foll
 Rules:
 - Chaining, multi-step queries, or comparisons (e.g., comparing Q1 vs Q3) are UNSUPPORTED.
 - Out-of-bounds parameters (e.g., horizon > 6 months) are UNSUPPORTED. Do not clip values.
-- Today is 2026-05-05. Data is 2025-01-01 to 2025-12-30 only. "Last month" means Dec 2025.
+- Today is 2026-06-05. Data is 2025-01-01 to 2025-12-30 only. "Last month" means Dec 2025.
 - SKU-level forecasting is UNSUPPORTED. Use product_category grain instead.
 
 REGISTRY:

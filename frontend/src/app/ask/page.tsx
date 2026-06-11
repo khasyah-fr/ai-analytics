@@ -179,7 +179,7 @@ function ResponseView({ response }: { response: AskResponse }) {
             {fmtNumber(result.inventory_recommendation)} units
           </div>
           <p className="mt-2 text-xs font-mono text-slate-400">
-            ⌈sum(forecast) × 1.20⌉ — 20% safety stock buffer.
+            ⌈sum(forecast) × 1.10⌉ — 10% buffer.
           </p>
         </div>
         <div className="rounded-xl border-2 border-slate-200/80 bg-white p-5 shadow-sm">

@@ -106,14 +106,14 @@ The method used, the parameters, and methodology note all come back in the respo
 
 ### Dockerization
 
-The backend has a working `Dockerfile` (multi-stage build, Node 20 Alpine) and `docker-compose.yml`. To run in production:
+The backend has a working `Dockerfile` (multi-stage build, Node 20) and `docker-compose.yml`. To run in production:
 
 ```bash
 cd backend
 docker compose up --build
 ```
 
-The compose file exposes port `8080` and includes environment variable passthrough. The Postgres service is already wired but dormant — it's there for the production migration, not the MVP.
+The compose file exposes port `8080` and includes environment variable passthrough. The Postgres service is already wired but dormant.
 
 ---
 
@@ -169,9 +169,9 @@ The LLM is instructed to return `UNSUPPORTED:` for any of the following. The fro
 
 ## Stack
 
-**Backend** — Node.js, Express 5, TypeScript, DuckDB, Zod, OpenAI SDK (OpenRouter-compatible)
+**Backend** — Node.js, Express, TypeScript, DuckDB, Zod
 
-**Frontend** — Next.js 16 (App Router), React 19, Tailwind CSS 4, Recharts
+**Frontend** — Next.js, React, Tailwind CSS, Recharts
 
 ---
 
@@ -182,7 +182,7 @@ The LLM is instructed to return `UNSUPPORTED:` for any of the following. The fro
 ```bash
 cd backend
 cp .env.example .env
-# Fill in API_KEY (your OpenRouter or Anthropic key)
+# Fill in API_KEY
 npm install
 npm run dev
 ```
